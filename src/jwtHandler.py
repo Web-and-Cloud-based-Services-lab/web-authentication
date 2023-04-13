@@ -4,8 +4,11 @@ import json
 
 class JWTHandler(object):
     def __init__(self, user):
+        # the algorithm used to generate the signature is HMAC SHA256
         self.header = {"alg": "HS256", "typ": "JWT"}
+        # the payload contains the subject's username, which is an immutable identifier for the user
         self.payload = {"sub": "{}".format(user)}
+        # the secret key used to sign the JWT
         self.secret = "Group8Secret"
 
     # encode header, payload, and signature respectively and generate corresponding JWT
