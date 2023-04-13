@@ -1,0 +1,49 @@
+
+from flask import Flask
+from flask import request
+from flask_cors import CORS, cross_origin
+from src.jwtHandler import jwtHandler
+
+app = Flask(__name__)
+cors = CORS(app) # cors is added in advance to allow cors requests
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+@app.route('/', methods=["GET"])
+@cross_origin()
+def index():
+    return "Authentication Connected"
+
+@app.route('/users', methods=["POST"])
+@cross_origin()
+def post_user():
+    if request.method == 'POST':
+        get_data=request.args # get_data gets the body of post request
+        get_dict = get_data.to_dict()
+        username = get_dict['username']
+        password = get_dict['password']
+        
+@app.route('/users', methods=["PUT"])
+@cross_origin()
+def update_password(): 
+    get_data=request.args
+    get_dict = get_data.to_dict()
+    username = get_dict['username']
+    old_password = get_dict['old-password']
+    new_password = get_dict['new-password']
+        
+@app.route('/users/login', methods=["POST"])
+@cross_origin()
+def handle_login():
+    if request.method == 'POST':
+        get_data=request.args
+        get_dict = get_data.to_dict()
+        username = get_dict['username']
+        password = get_dict['password']
+
+@app.route('/users/validation', methods=["POST"])
+@cross_origin()
+def handle_login():
+    if request.method == 'POST':
+        get_data=request.args
+        get_dict = get_data.to_dict()
+        token = get_dict['jwt']
