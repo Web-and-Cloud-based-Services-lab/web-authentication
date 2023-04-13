@@ -2,7 +2,7 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-from src.jwtHandler import jwtHandler
+from jwtHandler import jwtHandler
 
 app = Flask(__name__)
 cors = CORS(app) # cors is added in advance to allow cors requests
@@ -42,7 +42,7 @@ def handle_login():
 
 @app.route('/users/validation', methods=["POST"])
 @cross_origin()
-def handle_login():
+def validation_check():
     if request.method == 'POST':
         get_data=request.args
         get_dict = get_data.to_dict()
