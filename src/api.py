@@ -3,6 +3,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 from apiHandler import apiHandler
+from jwtHandler import jwtHandler
 from base64 import urlsafe_b64decode
 import json
 
@@ -51,6 +52,12 @@ def handle_login():
         get_dict = get_data.to_dict()
         username = get_dict['username']
         password = get_dict['password']
+        if not apiHandler.user_exists(username):
+            return {"message": "username does not exist"}, 403
+        if not apiHandler.password_validated(username, password):
+            return {"message": "password is not valid"}, 403
+        jwt = jwtHandler.generate_jwt(username)
+        return {"message": "Login Success", "data":{"jwt": jwt}}, 200
 
 @app.route('/users/validation', methods=["POST"])
 @cross_origin()
@@ -62,6 +69,6 @@ def validation_check():
 
         verify_result = apiHandler.verify_signiture(token)
         if verify_result["verified"]:
-            return {"message": "Authentication Successful", "name": verify_result["username"]}, 200
+            return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
         else:
             return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
