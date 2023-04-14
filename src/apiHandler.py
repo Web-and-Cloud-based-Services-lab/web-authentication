@@ -1,4 +1,3 @@
-import pymongo
 from dbClient import mongo_client
 from jwtHandler import jwtHandler
 import json
@@ -6,33 +5,48 @@ import json
 class ApiHandler(object):
     def __init__(self):
         self.client = mongo_client
-        # self.db = self.client.url_shortener
-        # self.collection_urls = self.db.Urls
-        self.users = [{"username": "admin", "password": "admin"}]
-    
+        self.db = self.client.user_auth
+        self.user_info = self.db.user_info
+        if not self.check_existance("admin"):
+            self.user_info.insert_one({"username": "admin", "password": "admin"})
+
+    # retrieve all usernames stored in database
+    def get_users(self):
+        documents = self.user_info.find({})
+        keys = []
+        for document in documents:
+          keys.append(document['username'])
+        return json.dumps(keys, indent=2, ensure_ascii=False)
+        
     def user_exists(self, username):
         return any(record['username'] == username for record in self.users)
     
     def handle_register(self, username, password):
-        self.users.append({"username": username, "password": password})
-        print("current users: ", self.users)
+        self.user_info.insert_one({"username": username, "password": password})
     
     def password_validated(self, username, password):
-        for user in self.users:
-            if user["username"] == username:
-                return user["password"] == password
-        return False
+        query = {"username": username}
+        document = self.user_info.find_one(query)
+        if document["password"] == None:
+            return False
+        return document["password"] == password
         
     def handle_password_update(self, username, new_password):
-        for user in self.users:
-            if user["username"] == username:
-                user["password"] = new_password
-        print("users: ", self.users)
+        query = {"username": username}
+        new_value = { "$set": { "password": new_password } }
+        self.user_info.update_one(query, new_value)
+
+    def check_existance(self, username):
+        documents = self.user_info.find({})
+        for document in documents:
+            if document["username"] == username:
+                return True
+        return False
 
     def verify_signiture(self,token):
         encoded_header, encoded_payload, encoded_signature = token.split('.')
         try:
-             # decode the base64url encoded string into a byte string, then decode it into a string
+            # decode the base64url encoded string into a byte string, then decode it into a string
             # the payload is of the form: {"name": "<username>"}
             payload = jwtHandler.decode_base64url(encoded_payload).decode()
             # convert the payload string into a json object    
