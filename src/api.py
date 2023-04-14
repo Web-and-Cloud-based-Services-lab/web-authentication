@@ -2,7 +2,9 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-from jwtHandler import jwtHandler
+from apiHandler import apiHandler
+from base64 import urlsafe_b64decode
+import json
 
 app = Flask(__name__)
 cors = CORS(app) # cors is added in advance to allow cors requests
@@ -47,3 +49,9 @@ def validation_check():
         get_data=request.args
         get_dict = get_data.to_dict()
         token = get_dict['jwt']
+
+        verify_result = apiHandler.verify_signiture(token)
+        if verify_result["verified"]:
+            return {"message": "Authentication Successful", "name": verify_result["username"]}, 200
+        else:
+            return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
