@@ -23,6 +23,10 @@ def post_user():
         get_dict = get_data.to_dict()
         username = get_dict['username']
         password = get_dict['password']
+        if apiHandler.user_exists(username):
+            return {"message": "user already exists"},409
+        apiHandler.handle_register(username, password)
+        return {"message": "account created"}, 201
         
 @app.route('/users', methods=["PUT"])
 @cross_origin()
@@ -32,7 +36,13 @@ def update_password():
     username = get_dict['username']
     old_password = get_dict['old-password']
     new_password = get_dict['new-password']
-        
+    if not apiHandler.user_exists(username):
+        return {"message": "username does not exist"}, 403
+    if not apiHandler.password_validated(username, old_password):
+        return {"message": "old password is not valid"}, 403
+    apiHandler.handle_password_update(username, new_password)
+    return {"message": "password changed"}, 200
+
 @app.route('/users/login', methods=["POST"])
 @cross_origin()
 def handle_login():

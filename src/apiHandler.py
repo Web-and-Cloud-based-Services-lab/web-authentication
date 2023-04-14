@@ -6,9 +6,29 @@ import json
 class ApiHandler(object):
     def __init__(self):
         self.client = mongo_client
-        self.db = self.client.url_shortener
-        self.collection_urls = self.db.Urls
+        # self.db = self.client.url_shortener
+        # self.collection_urls = self.db.Urls
+        self.users = []
     
+    def user_exists(self, username):
+        return any(record['username'] == username for record in self.users)
+    
+    def handle_register(self, username, password):
+        self.users.append({"username": username, "password": password})
+        print("current users: ", self.users)
+    
+    def password_validated(self, username, password):
+        for user in self.users:
+            if user["username"] == username:
+                return user["password"] == password
+        return False
+        
+    def handle_password_update(self, username, new_password):
+        for user in self.users:
+            if user["username"] == username:
+                user["password"] = new_password
+        print("users: ", self.users)
+
     def verify_signiture(self,token):
         encoded_header, encoded_payload, encoded_signature = token.split('.')
         try:
