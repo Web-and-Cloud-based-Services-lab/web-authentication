@@ -27,7 +27,7 @@ class ApiHandler(object):
     def password_validated(self, username, password):
         query = {"username": username}
         document = self.user_info.find_one(query)
-        if document["password"] == None:
+        if document == None:
             return False
         return document["password"] == password
         

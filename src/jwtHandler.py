@@ -17,7 +17,7 @@ class JWTHandler(object):
     def get_password(self, username):
         query = {"username": username}
         document = self.user_info.find_one(query)
-        if document["password"] == None:
+        if document == None:
             return None
         return document["password"]
 
