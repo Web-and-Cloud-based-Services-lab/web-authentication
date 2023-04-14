@@ -8,7 +8,7 @@ class ApiHandler(object):
         self.client = mongo_client
         # self.db = self.client.url_shortener
         # self.collection_urls = self.db.Urls
-        self.users = []
+        self.users = [{"username": "admin", "password": "admin"}]
     
     def user_exists(self, username):
         return any(record['username'] == username for record in self.users)
