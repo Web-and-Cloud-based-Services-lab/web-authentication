@@ -7,7 +7,7 @@ class ApiHandler(object):
         self.client = mongo_client
         self.db = self.client.user_auth
         self.user_info = self.db.user_info
-        if not self.check_existance("admin"):
+        if not self.user_exists("admin"):
             self.user_info.insert_one({"username": "admin", "password": "admin"})
 
     # retrieve all usernames stored in database
@@ -19,7 +19,11 @@ class ApiHandler(object):
         return json.dumps(keys, indent=2, ensure_ascii=False)
         
     def user_exists(self, username):
-        return any(record['username'] == username for record in self.users)
+        documents = self.user_info.find({})
+        for document in documents:
+            if document["username"] == username:
+                return True
+        return False
     
     def handle_register(self, username, password):
         self.user_info.insert_one({"username": username, "password": password})
@@ -35,13 +39,6 @@ class ApiHandler(object):
         query = {"username": username}
         new_value = { "$set": { "password": new_password } }
         self.user_info.update_one(query, new_value)
-
-    def check_existance(self, username):
-        documents = self.user_info.find({})
-        for document in documents:
-            if document["username"] == username:
-                return True
-        return False
 
     def verify_signiture(self,token):
         encoded_header, encoded_payload, encoded_signature = token.split('.')
