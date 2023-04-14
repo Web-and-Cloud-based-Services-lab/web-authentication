@@ -2,7 +2,7 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-from jwtHandler import jwtHandler
+from apiHandler import apiHandler
 from base64 import urlsafe_b64decode
 import json
 
@@ -49,17 +49,9 @@ def validation_check():
         get_data=request.args
         get_dict = get_data.to_dict()
         token = get_dict['jwt']
-        encoded_header, encoded_payload, encoded_signature = token.split('.')
-        # decode the base64url encoded string into a byte string, then decode it into a string
-        # the payload is of the form: {"name": "<username>"}
-        payload = jwtHandler.decode_base64url(encoded_payload).decode()
-        # convert the payload string into a json object    
-        user_name = json.loads(payload)['name']
-        # decode the signature in the request into a byte string
-        signature = jwtHandler.decode_base64url(encoded_signature)
-        # generate the expected signature in the form of byte string based on the username
-        correct_signature = jwtHandler.generate_expected_signature(user_name)
-        if signature == correct_signature:
-            return {"message": "Authentication Successful", "name": user_name}, 200
+
+        verify_result = apiHandler.verify_signiture(token)
+        if verify_result["verified"]:
+            return {"message": "Authentication Successful", "name": verify_result["username"]}, 200
         else:
-            return {"message": "Authentication Failed", "signature": correct_signature}, 401
+            return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
