@@ -51,7 +51,7 @@ def validation_check():
         token = get_dict['jwt']
         encoded_header, encoded_payload, encoded_signature = token.split('.')
         # decode the base64url encoded string into a byte string, then decode it into a string
-        # the payload if of the form of {"name": "<username>"}
+        # the payload is of the form: {"name": "<username>"}
         payload = jwtHandler.decode_base64url(encoded_payload).decode()
         # convert the payload string into a json object    
         user_name = json.loads(payload)['name']
