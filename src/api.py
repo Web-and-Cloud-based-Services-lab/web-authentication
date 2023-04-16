@@ -4,8 +4,6 @@ from flask import request
 from flask_cors import CORS, cross_origin
 from apiHandler import apiHandler
 from jwtHandler import jwtHandler
-from base64 import urlsafe_b64decode
-import json
 
 app = Flask(__name__)
 cors = CORS(app) # cors is added in advance to allow cors requests
@@ -14,7 +12,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/', methods=["GET"])
 @cross_origin()
 def index():
-    return "Authentication Connected"
+    return "Authentication Connected" + "\nRegistered Users: " + apiHandler.get_users()
 
 @app.route('/users', methods=["POST"])
 @cross_origin()
@@ -25,7 +23,7 @@ def post_user():
         username = get_dict['username']
         password = get_dict['password']
         if apiHandler.user_exists(username):
-            return {"message": "user already exists"},409
+            return {"message": "user already exists"}, 409
         apiHandler.handle_register(username, password)
         return {"message": "account created"}, 201
         
