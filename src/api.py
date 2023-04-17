@@ -57,16 +57,15 @@ def handle_login():
         jwt = jwtHandler.generate_jwt(username)
         return {"message": "Login Success", "data":{"jwt": jwt}}, 200
 
-@app.route('/users/validation', methods=["POST"])
+@app.route('/users/validation', methods=["GET"])
 @cross_origin()
 def validation_check():
-    if request.method == 'POST':
-        get_data=request.args
-        get_dict = get_data.to_dict()
-        token = get_dict['jwt']
+    get_data=request.args
+    get_dict = get_data.to_dict()
+    token = get_dict['jwt']
 
-        verify_result = apiHandler.verify_signiture(token)
-        if verify_result["verified"]:
-            return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
-        else:
-            return {"message": "Authentication Failed", "type": verify_result["message"]}, 401
+    verify_result = apiHandler.verify_signiture(token)
+    if verify_result["verified"]:
+        return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
+    else:
+        return {"message": "Authentication Failed", "type": verify_result["message"]}, 401

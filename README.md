@@ -58,6 +58,6 @@ $ python3 run.py
 /users |[?username=...&password=...] |POST|127.0.0.1:7777/users?username=test&password=test|create a user account|
 /users|[?username=...&old-password=...&new-password=...]|PUT|127.0.0.1:7777/users?username=test&old-password=test&new-password=newtest| Update passowrd|
 /users/login | [?username=...&password=...]| POST| 127.0.0.1:7777/users/login?username=test&password=test | Login and get JWT| 
-/users/validation |[?jwt=...]| POST | 127.0.0.1:7777/users/validation?jwt=eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJuYW1lIjogIkNhaSJ9.MK_ds0u2DsMteRixl1SX1IdInRd73j1p3qNQFOW7yG4| Validate login status and get username|
+/users/validation |[?jwt=...]| GET | 127.0.0.1:7777/users/validation?jwt=eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJuYW1lIjogIkNhaSJ9.MK_ds0u2DsMteRixl1SX1IdInRd73j1p3qNQFOW7yG4| Validate login status and get username|
 
 
