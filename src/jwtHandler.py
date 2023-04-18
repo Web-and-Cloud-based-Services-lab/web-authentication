@@ -14,6 +14,9 @@ class JWTHandler(object):
         self.header = {"alg": "HS256", "typ": "JWT"}
         # the secret key used to sign the JWT
         self.secret = "Group8Secret"
+        self.file = open('../Config.json','r')
+        self.config = json.load(self.file)
+        self.file.close()
     
     # get the password of the user with the given username
     def get_password(self, username):
@@ -22,10 +25,6 @@ class JWTHandler(object):
         if document == None:
             return None
         return document["password"]
-
-        self.file = open('../Config.json','r')
-        self.config = json.load(self.file)
-        self.file.close()
 
     # encode header, payload, and signature respectively and generate corresponding JWT
     # reference: https://jwt.io/introduction/ , https://docs.python.org/3/library/hmac.html
