@@ -1,4 +1,6 @@
 import pymongo
+import calendar
+import time
 from dbClient import mongo_client
 from jwtHandler import jwtHandler
 import json
@@ -37,7 +39,10 @@ class ApiHandler(object):
         else:
             return {"verified": False, "message": "Invalid signature"}
 
-    # TODO: use exp_timestamp compare with current timestamp to determine whether the login is still valid
+    # check if login is still valid within the expire time
     def inactive_login(self,exp_timestamp):
-        return exp_timestamp > 30 # This is a dummy return, FIX it!!
+        cur_time = time.gmtime()
+        cur_timestamp = calendar.timegm(cur_time)
+        return cur_timestamp > exp_timestamp
+    
 apiHandler = ApiHandler()

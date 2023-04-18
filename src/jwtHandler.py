@@ -1,6 +1,8 @@
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 import hmac
 import json
+import calendar
+import time
 
 class JWTHandler(object):
     def __init__(self):
@@ -39,13 +41,14 @@ class JWTHandler(object):
     def decode_base64url(self, encoded):
         return urlsafe_b64decode(encoded + "=" * (4 - len(encoded) % 4))
     
-    # TODO: FIX current_timestamp and exp_timestamp
-    # use the current timestamp and exp-second to calculate the expired timestamp
+    # generate the current timestamp and calculate expired timesatmp 
+    # reference: https://kb.narrative.io/what-is-unix-time#:~:text=Unix%20time%20is%20a%20way,and%20use%20across%20different%20systems.
     def get_exp_timestamp(self):
-        current_timestamp = 0
+        current_GMT = time.gmtime()
+        # convert the tuple format of current into the timestamp format
+        current_timestamp = calendar.timegm(current_GMT)
         exp_period = self.config["exp-period"]
-        exp_timestamp = exp_period
-        return exp_timestamp
+        return exp_period + current_timestamp
 
 jwtHandler = JWTHandler()
 print(jwtHandler.generate_jwt("Yuna"))
