@@ -18,10 +18,9 @@ def index():
 @cross_origin()
 def post_user():
     if request.method == 'POST':
-        get_data=request.args # get_data gets the body of post request
-        get_dict = get_data.to_dict()
-        username = get_dict['username']
-        password = get_dict['password']
+        get_data = request.args.to_dict() # get_data gets the body of post request
+        username = get_data['username']
+        password = get_data['password']
         if apiHandler.user_exists(username):
             return {"message": "user already exists"}, 409
         apiHandler.handle_register(username, password)
@@ -30,11 +29,10 @@ def post_user():
 @app.route('/users', methods=["PUT"])
 @cross_origin()
 def update_password(): 
-    get_data=request.args
-    get_dict = get_data.to_dict()
-    username = get_dict['username']
-    old_password = get_dict['old-password']
-    new_password = get_dict['new-password']
+    get_data = request.args.to_dict()
+    username = get_data['username']
+    old_password = get_data['old-password']
+    new_password = get_data['new-password']
     if not apiHandler.user_exists(username):
         return {"message": "username does not exist"}, 403
     if not apiHandler.password_validated(username, old_password):
@@ -46,10 +44,9 @@ def update_password():
 @cross_origin()
 def handle_login():
     if request.method == 'POST':
-        get_data=request.args
-        get_dict = get_data.to_dict()
-        username = get_dict['username']
-        password = get_dict['password']
+        get_data=request.args.to_dict()
+        username = get_data['username']
+        password = get_data['password']
         if not apiHandler.user_exists(username):
             return {"message": "username does not exist"}, 403
         if not apiHandler.password_validated(username, password):
@@ -60,10 +57,8 @@ def handle_login():
 @app.route('/users/validation', methods=["GET"])
 @cross_origin()
 def validation_check():
-    get_data=request.args
-    get_dict = get_data.to_dict()
-    token = get_dict['jwt']
-
+    get_data=request.args.to_dict()
+    token = get_data['jwt']
     verify_result = apiHandler.verify_signiture(token)
     if verify_result["verified"]:
         return {"message": "Authentication Successful", "data": {"name": verify_result["username"]}}, 200
