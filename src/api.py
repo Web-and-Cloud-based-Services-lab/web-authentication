@@ -21,6 +21,8 @@ def post_user():
         get_data = request.args.to_dict() # get_data gets the body of post request
         username = get_data['username']
         password = get_data['password']
+        if len(username) < 1 or len(password) < 1 :
+            return {"message": "invalid username or password"}, 403
         if apiHandler.user_exists(username):
             return {"message": "user already exists"}, 409
         apiHandler.handle_register(username, password)
