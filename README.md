@@ -23,6 +23,28 @@ Python hmac library introduction:
 1. `Docker`  installed
 2. `Python >= 3.4`  installed
 
+## Docker
+
+<!-- Buid
+```shell
+docker build -t reisafriche/auth-service:v1 .
+```
+
+push
+```shell
+docker push reisafriche/auth-service:v1  
+``` -->
+
+<!-- pull docker image
+```shell
+docker pull reisafriche/auth-service:v1
+``` -->
+
+run docker container
+```shell
+docker run --name auth-service -p 7777:7777 docker.io/reisafriche/auth-service:v1
+```
+
 ## Build
 
 <!-- ### 1. Run the database
