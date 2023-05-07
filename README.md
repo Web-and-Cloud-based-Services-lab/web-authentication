@@ -27,22 +27,23 @@ Python hmac library introduction:
 
 <!-- Buid
 ```shell
-docker build -t reisafriche/auth-service:v1 .
+docker buildx create --use
+docker buildx build -t reisafriche/auth-service:v2 --platform linux/amd64,linux/arm64 --push .
 ```
 
 push
 ```shell
-docker push reisafriche/auth-service:v1  
+docker push reisafriche/auth-service:v2  
 ``` -->
 
 <!-- pull docker image
 ```shell
-docker pull reisafriche/auth-service:v1
+docker pull reisafriche/auth-service:v2
 ``` -->
 
 run docker container
 ```shell
-docker run --name auth-service -p 7777:7777 docker.io/reisafriche/auth-service:v1
+docker run --name auth-service -p 7777:7777 docker.io/reisafriche/auth-service:v2
 ```
 
 ## Build
