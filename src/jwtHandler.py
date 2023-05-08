@@ -4,6 +4,7 @@ import json
 from dbClient import mongo_client
 import calendar
 import time
+import os
 
 class JWTHandler(object):
     def __init__(self):
@@ -13,7 +14,7 @@ class JWTHandler(object):
         # the algorithm used to generate the signature is HMAC SHA256
         self.header = {"alg": "HS256", "typ": "JWT"}
         # the secret key used to sign the JWT
-        self.secret = "Group8Secret"
+        self.secret = '{jwt_public}'.format(jwt_public = os.environ['JWT_PUBLIC'])
         self.file = open('../Config.json','r')
         self.config = json.load(self.file)
         self.file.close()
